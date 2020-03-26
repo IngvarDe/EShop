@@ -1,0 +1,35 @@
+﻿@model IEnumerable<EShop.Admin.Models.Product.ProductGridListItem>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col"></th>
+            <th scope="col">Name</th>
+            <th scope="col">Decription</th>
+            <th scope="col">Price</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <th scope="row"></th>
+                <td class="">@product.Name</td>
+                <td class="">@product.Description</td>
+                <td class="">@product.Value</td>
+
+                <td class="">
+                    <a asp-action="edit" asp-controller="product" asp-route-id="@product.Id" class="btn btn-primary">Edit</a>
+                    <a href="#" class="btn btn-danger">Delete</a>
+                </td>
+                <td class=""></td>
+            </tr>
+        }
+    </tbody>
+</table>
