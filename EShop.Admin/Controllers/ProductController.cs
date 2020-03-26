@@ -29,7 +29,8 @@ namespace EShop.Admin.Controllers
         public IActionResult Index()
         {
             int queueNumber = 0;
-            queueNumber++;
+            //queueNumber += 1;
+            //queueNumber++;
 
             var seed = _context.Product
                 .Select(x => new ProductGridListItem
