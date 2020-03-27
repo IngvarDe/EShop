@@ -3,20 +3,30 @@ using EShop.Core.Dtos;
 using EShop.Core.ServiceInterface;
 using EShop.Core.ServiceResult;
 using EShop.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace EShop.ApplicationServices.Products
 {
     public class ProductsService : IProductService
     {
-        private EShopDbContext _context { get; set; }
+        static EShopDbContext _context { get; set; }
 
         public ProductsService(EShopDbContext context)
         {
             _context = context;
+        }
+
+        public async Task<Product> GetAsync(Guid id)
+        {
+            var result = await _context.Product
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            return result;
         }
 
         public ServiceResult<Product> Save(ProductDto dto)
@@ -24,21 +34,6 @@ namespace EShop.ApplicationServices.Products
             Product product = new Product
             {
                 Id = Guid.NewGuid(),
-                Name = dto.Name,
-                Description = dto.Description,
-                Value = dto.Value
-            };
-
-            _context.Product.Add(product);
-            _context.SaveChanges();
-            return ServiceResult<Product>.Ok(product);
-        }
-
-        public ServiceResult<Product> Edit(ProductDto dto)
-        {
-            Product product = new Product
-            {
-                Id = dto.Id,
                 Name = dto.Name,
                 Description = dto.Description,
                 Value = dto.Value

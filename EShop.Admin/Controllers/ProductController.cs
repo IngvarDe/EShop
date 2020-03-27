@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using EShop.Admin.Models.Product;
 using EShop.Common.Extensions;
 using EShop.Core.Dtos;
@@ -28,15 +29,11 @@ namespace EShop.Admin.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            int queueNumber = 0;
-            //queueNumber += 1;
-            //queueNumber++;
 
             var seed = _context.Product
                 .Select(x => new ProductGridListItem
                 {
                     Id = x.Id,
-                    QueueNumber = queueNumber,
                     Name = x.Name,
                     Description = x.Description,
                     Value = x.Value
@@ -46,31 +43,31 @@ namespace EShop.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
-            ProductDto model = new ProductDto();
+            var product = await _productService.GetAsync(id);
 
-            if (!ModelState.IsValid)
+            if (product == null)
             {
-                return ValidationError();
+                return NotFound();
             }
 
-            var vm = new ProductDto()
+            var model = new ProductViewModel
             {
-                Id = id,
-                Description = model.Description,
-                Name = model.Name,
-                Value = model.Value
+                Id = product.Id,
+                Description = product.Description,
+                Name = product.Name,
+                Value = product.Value
             };
 
-            var result = _productService.Edit(vm);
-
-            return View(result);
+            return View(model);
         }
 
         [HttpPost]
-        public IActionResult Edit(ProductViewModel model)
+        public IActionResult Edit()
         {
+            ProductViewModel model = new ProductViewModel();
+
             if (!ModelState.IsValid)
             {
                 return ValidationError();
@@ -92,6 +89,20 @@ namespace EShop.Admin.Controllers
             }
 
             return RedirectToAction("Edit", model);
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Guid id)
+        {
+            ProductDto dto = new ProductDto();
+
+            var product = _productService.Delete(dto);
+            if (product == null)
+            {
+                return RedirectToAction(nameof(Edit));
+            }
+
+            return RedirectToAction(nameof(Index), id);
         }
     }
 }
