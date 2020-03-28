@@ -4,7 +4,14 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+@if (Model.Id == null)
+{
+    <h1>Add</h1>
+}
+else
+{
+    <h1>Edit</h1>
+}
 
 <div>
     <form method="post">
@@ -33,6 +40,14 @@
 
         <input class="btn btn-primary" type="submit" value="Save Product" />
 
-        <a asp-action="index" asp-controller="product" class="btn btn-primary">Index</a>
+        @if (Model.Id == null)
+        {
+            <a asp-action="add" asp-controller="product" class="btn btn-salary">Add</a>
+        }
+        else
+        {
+            <a asp-action="index" asp-controller="product" class="btn btn-primary">Index</a>
+        }
+
     </form>
 </div>
