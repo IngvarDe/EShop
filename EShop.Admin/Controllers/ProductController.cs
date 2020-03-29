@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EShop.Admin.Models.Product;
 using EShop.Common.Extensions;
+using EShop.Common.Helpers;
 using EShop.Core.Dtos;
 using EShop.Core.ServiceInterface;
 using EShop.Data;
@@ -43,6 +44,17 @@ namespace EShop.Admin.Controllers
         }
 
         [HttpGet]
+        public IActionResult Add()
+        {
+            var model = new ProductViewModel
+            {
+                CreatedAt = DateTime.Now
+            };
+
+            return View("Edit", model);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
             var product = await _productService.GetAsync(id);
@@ -78,7 +90,8 @@ namespace EShop.Admin.Controllers
                 Id = model.Id,
                 Description = model.Description,
                 Name = model.Name,
-                Value = model.Value
+                Value = model.Value,
+                ModifiedAt = DateTime.Now
             };
 
             var result = _productService.Save(dto);

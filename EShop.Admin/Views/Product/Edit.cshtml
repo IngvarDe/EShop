@@ -4,7 +4,7 @@
     ViewData["Title"] = "Edit";
 }
 
-@if (Model.Id == null)
+@if (Model.Id.HasValue)
 {
     <h1>Add</h1>
 }
@@ -40,7 +40,7 @@ else
 
         <input class="btn btn-primary" type="submit" value="Save Product" />
 
-        @if (Model.Id == null)
+        @if (Model.Id.HasValue)
         {
             <a asp-action="add" asp-controller="product" class="btn btn-salary">Add</a>
         }
