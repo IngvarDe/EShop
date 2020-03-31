@@ -29,19 +29,45 @@ namespace EShop.ApplicationServices.Products
             return result;
         }
 
-        public ServiceResult<Product> Save(ProductDto dto)
+        public async Task<Product> Add(ProductDto dto)
         {
             Product product = new Product
             {
                 Id = Guid.NewGuid(),
                 Name = dto.Name,
                 Description = dto.Description,
-                Value = dto.Value
+                Value = dto.Value,
+                CreatedAt = DateTime.Now,
+                ModifiedAt = DateTime.Now
             };
 
-            _context.Product.Add(product);
-            _context.SaveChanges();
-            return ServiceResult<Product>.Ok(product);
+            await _context.Product.AddAsync(product);
+            await _context.SaveChangesAsync();
+            return product;
+        }
+
+        public async Task<Product> Update(ProductDto dto)
+        {
+            Product product = new Product
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                Description = dto.Description,
+                Value = dto.Value,
+                CreatedAt = dto.CreatedAt, //todo dosent save old created at
+                ModifiedAt = DateTime.Now
+            };
+
+            _context.Product.Update(product);
+            await _context.SaveChangesAsync();
+            return product;
+
+            //var result = _productService.Update(dto);
+            //if (!result.IsSuccess)
+            //{
+            //    Response.StatusCode = ApplicationHttpStatusCodes.ValidationError;
+            //    return Json(ModelState.Errors());
+            //}
         }
 
         public ServiceResults Delete(ProductDto dto)
@@ -53,19 +79,5 @@ namespace EShop.ApplicationServices.Products
 
             return ServiceResults.Ok();
         }
-
-        //public ServiceResults ProductGrid()
-        //{
-        //    var result = _context.Product
-        //        .Select(x => new ProductDto
-        //        {
-        //            Id = x.Id,
-        //            Description = x.Description,
-        //            Name = x.Name,
-        //            Value = x.Value
-        //        });
-
-        //    return ServiceResults.Ok();
-        //}
     }
 }

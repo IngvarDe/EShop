@@ -26,12 +26,12 @@ namespace EShop.Admin.Controllers
             _context = context;
         }
 
-
+        //Grid
         [HttpGet]
         public IActionResult Index()
         {
-
             var seed = _context.Product
+                .OrderByDescending(y => y.CreatedAt)
                 .Select(x => new ProductGridListItem
                 {
                     Id = x.Id,
@@ -46,10 +46,62 @@ namespace EShop.Admin.Controllers
         [HttpGet]
         public IActionResult Add()
         {
-            var model = new ProductViewModel
+            ProductViewModel model = new ProductViewModel();
+
+            return View("Edit", model);
+        }
+
+        [HttpPost]
+        public Task<IActionResult> Add(ProductViewModel model)
+        {
+            return Save(model, true);
+        }
+
+        private async Task<IActionResult> Save(ProductViewModel model, bool isNew = false)
+        {
+            var dto = new ProductDto()
             {
-                CreatedAt = DateTime.Now
+                Id = model.Id,
+                Description = model.Description,
+                Name = model.Name,
+                Value = model.Value,
+                ModifiedAt = model.ModifiedAt,
+                CreatedAt = model.CreatedAt
             };
+
+            //if (isNew == true)
+            //{
+            //    dto = new ProductDto()
+            //    {
+            //        Id = model.Id,
+            //        Description = model.Description,
+            //        Name = model.Name,
+            //        Value = model.Value,
+            //        ModifiedAt = model.ModifiedAt,
+            //        CreatedAt = model.CreatedAt
+            //    };
+            //}
+            //else
+            //{
+            //    dto = new ProductDto()
+            //    {
+            //        Id = model.Id,
+            //        Description = model.Description,
+            //        Name = model.Name,
+            //        Value = model.Value,
+            //        ModifiedAt = model.ModifiedAt,
+            //        CreatedAt = model.CreatedAt
+            //    };
+            //}
+
+            var result = isNew
+                ? _productService.Add(dto)
+                : _productService.Update(dto);
+
+            if (result == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
 
             return View("Edit", model);
         }
@@ -76,32 +128,9 @@ namespace EShop.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit()
+        public Task<IActionResult> Edit(ProductViewModel model)
         {
-            ProductViewModel model = new ProductViewModel();
-
-            if (!ModelState.IsValid)
-            {
-                return ValidationError();
-            }
-
-            var dto = new ProductDto()
-            {
-                Id = model.Id,
-                Description = model.Description,
-                Name = model.Name,
-                Value = model.Value,
-                ModifiedAt = DateTime.Now
-            };
-
-            var result = _productService.Save(dto);
-            if (!result.IsSuccess)
-            {
-                Response.StatusCode = ApplicationHttpStatusCodes.ValidationError;
-                return Json(ModelState.Errors());
-            }
-
-            return RedirectToAction("Edit", model);
+            return Save(model, false);
         }
 
         [HttpPost]
