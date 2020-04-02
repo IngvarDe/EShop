@@ -321,3 +321,4 @@ bld/
 */**/bin/Release
 */**/obj/Debug
 */**/obj/Release
+ApplicationServices/Class1.cs
