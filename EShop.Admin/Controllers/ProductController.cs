@@ -57,55 +57,6 @@ namespace EShop.Admin.Controllers
             return Save(model, true);
         }
 
-        private async Task<IActionResult> Save(ProductViewModel model, bool isNew = false)
-        {
-            var dto = new ProductDto()
-            {
-                Id = model.Id,
-                Description = model.Description,
-                Name = model.Name,
-                Value = model.Value,
-                ModifiedAt = model.ModifiedAt,
-                CreatedAt = model.CreatedAt
-            };
-
-            //if (isNew == true)
-            //{
-            //    dto = new ProductDto()
-            //    {
-            //        Id = model.Id,
-            //        Description = model.Description,
-            //        Name = model.Name,
-            //        Value = model.Value,
-            //        ModifiedAt = model.ModifiedAt,
-            //        CreatedAt = model.CreatedAt
-            //    };
-            //}
-            //else
-            //{
-            //    dto = new ProductDto()
-            //    {
-            //        Id = model.Id,
-            //        Description = model.Description,
-            //        Name = model.Name,
-            //        Value = model.Value,
-            //        ModifiedAt = model.ModifiedAt,
-            //        CreatedAt = model.CreatedAt
-            //    };
-            //}
-
-            var result = isNew
-                ? _productService.Add(dto)
-                : _productService.Update(dto);
-
-            if (result == null)
-            {
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View("Edit", model);
-        }
-
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
@@ -121,7 +72,9 @@ namespace EShop.Admin.Controllers
                 Id = product.Id,
                 Description = product.Description,
                 Name = product.Name,
-                Value = product.Value
+                Value = product.Value,
+                CreatedAt = product.CreatedAt,
+                ModifiedAt = product.ModifiedAt
             };
 
             return View(model);
@@ -133,18 +86,40 @@ namespace EShop.Admin.Controllers
             return Save(model, false);
         }
 
-        [HttpPost]
-        public IActionResult Delete(Guid id)
+        private async Task<IActionResult> Save(ProductViewModel model, bool isNew = false)
         {
-            ProductDto dto = new ProductDto();
+            var dto = new ProductDto()
+            {
+                Id = model.Id,
+                Description = model.Description,
+                Name = model.Name,
+                Value = model.Value,
+                ModifiedAt = model.ModifiedAt,
+                CreatedAt = model.CreatedAt
+            };
 
-            var product = _productService.Delete(dto);
+            var result = isNew
+                ? _productService.Add(dto)
+                : _productService.Update(dto);
+
+            if (result == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View("Edit", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var product = await _productService.Delete(id);
             if (product == null)
             {
                 return RedirectToAction(nameof(Edit));
             }
 
-            return RedirectToAction(nameof(Index), id);
+            return RedirectToAction(nameof(Index), product);
         }
     }
 }

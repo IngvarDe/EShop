@@ -54,30 +54,24 @@ namespace EShop.ApplicationServices.Products
                 Name = dto.Name,
                 Description = dto.Description,
                 Value = dto.Value,
-                CreatedAt = dto.CreatedAt, //todo dosent save old created at
+                CreatedAt = dto.CreatedAt,
                 ModifiedAt = DateTime.Now
             };
 
             _context.Product.Update(product);
             await _context.SaveChangesAsync();
             return product;
-
-            //var result = _productService.Update(dto);
-            //if (!result.IsSuccess)
-            //{
-            //    Response.StatusCode = ApplicationHttpStatusCodes.ValidationError;
-            //    return Json(ModelState.Errors());
-            //}
         }
 
-        public ServiceResults Delete(ProductDto dto)
+        public async Task<Product> Delete(Guid id)
         {
-            var productId = _context.Product
-                .FirstOrDefault(x => x.Id == dto.Id);
+            var productId = await _context.Product
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             _context.Product.Remove(productId);
+            await _context.SaveChangesAsync();
 
-            return ServiceResults.Ok();
+            return productId;
         }
     }
 }

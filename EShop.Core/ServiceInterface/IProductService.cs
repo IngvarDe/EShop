@@ -9,9 +9,8 @@ namespace EShop.Core.ServiceInterface
     public interface IProductService
     {
         Task<Product> GetAsync(Guid id);
-        //ServiceResult<Product> Save(ProductDto dto);
         Task<Product> Add(ProductDto dto);
         Task<Product> Update(ProductDto dto);
-        ServiceResults Delete(ProductDto dto);
+        Task<Product> Delete(Guid id);
     }
 }
