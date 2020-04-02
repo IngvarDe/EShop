@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
-using System.Threading.Tasks;
 using EShop.Admin.Models.Product;
 using EShop.Common.Extensions;
-using EShop.Common.Helpers;
 using EShop.Core.Dtos;
 using EShop.Core.ServiceInterface;
 using EShop.Data;
@@ -26,15 +24,18 @@ namespace EShop.Admin.Controllers
             _context = context;
         }
 
-        //Grid
+
         [HttpGet]
         public IActionResult Index()
         {
+            int queueNumber = 0;
+            queueNumber++;
+
             var seed = _context.Product
-                .OrderByDescending(y => y.CreatedAt)
                 .Select(x => new ProductGridListItem
                 {
                     Id = x.Id,
+                    QueueNumber = queueNumber,
                     Name = x.Name,
                     Description = x.Description,
                     Value = x.Value
@@ -44,82 +45,52 @@ namespace EShop.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult Add()
+        public IActionResult Edit(Guid id)
         {
-            ProductViewModel model = new ProductViewModel();
+            ProductDto model = new ProductDto();
 
-            return View("Edit", model);
-        }
-
-        [HttpPost]
-        public Task<IActionResult> Add(ProductViewModel model)
-        {
-            return Save(model, true);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Edit(Guid id)
-        {
-            var product = await _productService.GetAsync(id);
-
-            if (product == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                return ValidationError();
             }
 
-            var model = new ProductViewModel
+            var vm = new ProductDto()
             {
-                Id = product.Id,
-                Description = product.Description,
-                Name = product.Name,
-                Value = product.Value,
-                CreatedAt = product.CreatedAt,
-                ModifiedAt = product.ModifiedAt
+                Id = id,
+                Description = model.Description,
+                Name = model.Name,
+                Value = model.Value
             };
 
-            return View(model);
+            var result = _productService.Edit(vm);
+
+            return View(result);
         }
 
         [HttpPost]
-        public Task<IActionResult> Edit(ProductViewModel model)
+        public IActionResult Edit(ProductViewModel model)
         {
-            return Save(model, false);
-        }
+            if (!ModelState.IsValid)
+            {
+                return ValidationError();
+            }
 
-        private async Task<IActionResult> Save(ProductViewModel model, bool isNew = false)
-        {
             var dto = new ProductDto()
             {
                 Id = model.Id,
                 Description = model.Description,
                 Name = model.Name,
-                Value = model.Value,
-                ModifiedAt = model.ModifiedAt,
-                CreatedAt = model.CreatedAt
+                Value = model.Value
             };
 
-            var result = isNew
-                ? _productService.Add(dto)
-                : _productService.Update(dto);
-
-            if (result == null)
+            var result = _productService.Save(dto);
+            if (!result.IsSuccess)
             {
-                return RedirectToAction(nameof(Index));
+                Response.StatusCode = ApplicationHttpStatusCodes.ValidationError;
+                return Json(ModelState.Errors());
             }
 
-            return View("Edit", model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Delete(Guid id)
-        {
-            var product = await _productService.Delete(id);
-            if (product == null)
-            {
-                return RedirectToAction(nameof(Edit));
-            }
-
-            return RedirectToAction(nameof(Index), product);
+            return RedirectToAction("Edit", model);
         }
     }
 }
