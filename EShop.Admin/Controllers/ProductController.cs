@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using EShop.Admin.Models.Product;
-using EShop.Common.Extensions;
 using EShop.Core.Dtos;
 using EShop.Core.ServiceInterface;
 using EShop.Data;
@@ -24,18 +24,15 @@ namespace EShop.Admin.Controllers
             _context = context;
         }
 
-
+        //Grid
         [HttpGet]
         public IActionResult Index()
         {
-            int queueNumber = 0;
-            queueNumber++;
-
             var seed = _context.Product
+                .OrderByDescending(y => y.CreatedAt)
                 .Select(x => new ProductGridListItem
                 {
                     Id = x.Id,
-                    QueueNumber = queueNumber,
                     Name = x.Name,
                     Description = x.Description,
                     Value = x.Value
@@ -45,52 +42,82 @@ namespace EShop.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(Guid id)
+        public IActionResult Add()
         {
-            ProductDto model = new ProductDto();
+            ProductViewModel model = new ProductViewModel();
 
-            if (!ModelState.IsValid)
-            {
-                return ValidationError();
-            }
-
-            var vm = new ProductDto()
-            {
-                Id = id,
-                Description = model.Description,
-                Name = model.Name,
-                Value = model.Value
-            };
-
-            var result = _productService.Edit(vm);
-
-            return View(result);
+            return View("Edit", model);
         }
 
         [HttpPost]
-        public IActionResult Edit(ProductViewModel model)
+        public Task<IActionResult> Add(ProductViewModel model)
         {
-            if (!ModelState.IsValid)
+            return Save(model, true);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var product = await _productService.GetAsync(id);
+
+            if (product == null)
             {
-                return ValidationError();
+                return NotFound();
             }
 
+            var model = new ProductViewModel
+            {
+                Id = product.Id,
+                Description = product.Description,
+                Name = product.Name,
+                Value = product.Value,
+                CreatedAt = product.CreatedAt,
+                ModifiedAt = product.ModifiedAt
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public Task<IActionResult> Edit(ProductViewModel model)
+        {
+            return Save(model, false);
+        }
+
+        private async Task<IActionResult> Save(ProductViewModel model, bool isNew = false)
+        {
             var dto = new ProductDto()
             {
                 Id = model.Id,
                 Description = model.Description,
                 Name = model.Name,
-                Value = model.Value
+                Value = model.Value,
+                ModifiedAt = model.ModifiedAt,
+                CreatedAt = model.CreatedAt
             };
 
-            var result = _productService.Save(dto);
-            if (!result.IsSuccess)
+            var result = isNew
+                ? _productService.Add(dto)
+                : _productService.Update(dto);
+
+            if (result == null)
             {
-                Response.StatusCode = ApplicationHttpStatusCodes.ValidationError;
-                return Json(ModelState.Errors());
+                return RedirectToAction(nameof(Index));
             }
 
-            return RedirectToAction("Edit", model);
+            return View("Edit", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var product = await _productService.Delete(id);
+            if (product == null)
+            {
+                return RedirectToAction(nameof(Edit));
+            }
+
+            return RedirectToAction(nameof(Index), product);
         }
     }
 }
