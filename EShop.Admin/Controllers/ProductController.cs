@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EShop.Admin.Models.Product;
 using EShop.Core.Dtos;
 using EShop.Core.ServiceInterface;
 using EShop.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EShop.Admin.Controllers
@@ -118,6 +121,31 @@ namespace EShop.Admin.Controllers
             }
 
             return RedirectToAction(nameof(Index), product);
+        }
+
+        //private async Task SaveFile(ProductFileViewModel model)
+        //{
+        //    string fileName = Path.GetFileName(model.File.FileName);
+
+        //}
+
+        public async Task<IActionResult> UploadAsync(List<IFormFile> files)
+        {
+            long size = files.Sum(f => f.Length);
+
+            foreach (var formFile in files)
+            {
+                if (formFile.Length > 0)
+                {
+                    var filePath = Path.GetTempFileName();
+
+                    using (var stream = System.IO.File.Create(filePath))
+                    {
+                        await formFile.CopyToAsync(stream);
+                    }
+                }
+            }
+            return Ok(new { count = files.Count, size });
         }
     }
 }
