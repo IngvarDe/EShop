@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0-preview.2.20120.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0-preview.2.20120.8">
       <PrivateAssets>all</PrivateAssets>
@@ -17,6 +18,10 @@
   <ItemGroup>
     <ProjectReference Include="..\EShop.ApplicationServices\EShop.ApplicationServices.csproj" />
     <ProjectReference Include="..\EShop.Common\EShop.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\multipleFileUpload\" />
   </ItemGroup>
 
 

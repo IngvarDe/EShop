@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 
 
 namespace EShop.Core.Domain
@@ -11,5 +12,6 @@ namespace EShop.Core.Domain
         public decimal Value { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
+        public string ExistingFilePath { get; set; }
     }
 }
