@@ -15,6 +15,7 @@ namespace EShop.Core.Dtos
         public decimal Value { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
+        //public List<IFormFile> Files { get; set; }
         public IFormFile File { get; set; }
         public string ExistingFilePath { get; set; }
 

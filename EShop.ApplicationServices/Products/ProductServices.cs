@@ -35,7 +35,7 @@ namespace EShop.ApplicationServices.Products
         public async Task<Product> Add(ProductDto dto)
         {
             string uniqueFileName = ProcessUploadedFile(dto);
-
+            
             Product product = new Product
             {
                 Id = Guid.NewGuid(),
@@ -94,40 +94,17 @@ namespace EShop.ApplicationServices.Products
             string uniqueFileName = null;
             if (dto.File != null)
             {
-                string uploadsFoleder = Path.Combine(_env.WebRootPath, "multipleFileUpload");
+                string uploadsFolder = Path.Combine(_env.WebRootPath, "multipleFileUpload");
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + dto.File.FileName;
-                string filePath = Path.Combine(uploadsFoleder, uniqueFileName);
-                foreach (var stream in filePath)
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        dto.File.CopyTo(fileStream);
-                    }
+                    dto.File.CopyTo(fileStream);
                 }
             }
+
             return uniqueFileName;
         }
-
-        //private string EnsureCorrectFileName(string filename)
-        //{
-        //    if (filename.Contains("\\"))
-        //    {
-        //        filename = filename.Substring(filename.LastIndexOf("\\") + 1);
-        //    }
-
-        //    return filename;
-        //}
-
-        //private string GetPathAndFilename(string filename)
-        //{
-        //    string path = _env.WebRootPath + "\\uploads\\";
-
-        //    if (!Directory.Exists(path))
-        //    {
-        //        Directory.CreateDirectory(path);
-        //    }
-
-        //    return path + filename;
-        //}
     }
 }
