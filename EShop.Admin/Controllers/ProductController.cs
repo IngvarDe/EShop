@@ -94,7 +94,12 @@ public class ProductController : BaseController
             Value = product.Value,
             CreatedAt = product.CreatedAt,
             ModifiedAt = product.ModifiedAt,
-            ExistingFilePath = product.ExistingFilePath
+            ExistingFilePaths = product.ExistingFilePaths.Select(x => new ExistingFilePathViewModel
+            {
+                Id = x.Id,
+                FilePath = x.FilePath
+            }).ToArray()
+            //ExistingFilePath = product.ExistingFilePath
         };
 
         return View(model);
@@ -112,7 +117,12 @@ public class ProductController : BaseController
             ModifiedAt = model.ModifiedAt,
             CreatedAt = model.CreatedAt,
             File = model.File,
-            ExistingFilePath = model.ExistingFilePath
+            ExistingFilePaths = model.ExistingFilePaths.Select(x => new ExistingFilePathDto
+            { 
+                Id = x.Id,
+                FilePath = x.FilePath
+            })
+            //ExistingFilePath = model.ExistingFilePath
         };
 
         var result = await _productService.Update(dto);

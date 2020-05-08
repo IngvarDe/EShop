@@ -13,7 +13,14 @@ namespace EShop.Admin.Models.Product
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
         public IFormFile File { get; set; }
+        public List<IFormFile> Files { get; set; }
         public string ExistingFilePath { get; set; }
-        //public IEnumerable<FileDescriptionShort> Resources { get; set; } = new List<FileDescriptionShort>();
+        public IEnumerable<ExistingFilePathViewModel> ExistingFilePaths { get; set; } = new List<ExistingFilePathViewModel>();
+    }
+
+    public class ExistingFilePathViewModel
+    {
+        public Guid Id { get; set; }
+        public string FilePath { get; set; }
     }
 }

@@ -8,6 +8,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using System.Linq;
 
 namespace EShop.ApplicationServices.Products
 {
@@ -35,14 +36,20 @@ namespace EShop.ApplicationServices.Products
         public async Task<Product> Add(ProductDto dto)
         {
             string uniqueFileName = ProcessUploadedFile(dto);
-            
+
             Product product = new Product
             {
                 Id = Guid.NewGuid(),
                 Name = dto.Name,
                 Description = dto.Description,
                 Value = dto.Value,
-                ExistingFilePath = uniqueFileName,
+                ExistingFilePaths = dto.ExistingFilePaths.Select(x => new ExistingFilePath
+                {
+                    Id = x.Id,
+                    FilePath = uniqueFileName
+                }).ToArray(),
+
+                //ExistingFilePath = uniqueFileName,
                 CreatedAt = DateTime.Now,
                 ModifiedAt = DateTime.Now
             };
@@ -94,14 +101,18 @@ namespace EShop.ApplicationServices.Products
             string uniqueFileName = null;
             if (dto.File != null)
             {
-                string uploadsFolder = Path.Combine(_env.WebRootPath, "multipleFileUpload");
-                uniqueFileName = Guid.NewGuid().ToString() + "_" + dto.File.FileName;
-                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                foreach (var item in dto.Files)
                 {
-                    dto.File.CopyTo(fileStream);
+                    string uploadsFolder = Path.Combine(_env.WebRootPath, "multipleFileUpload");
+                    uniqueFileName = Guid.NewGuid().ToString() + "_" + dto.File.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        dto.File.CopyTo(fileStream);
+                    }
                 }
+
             }
 
             return uniqueFileName;

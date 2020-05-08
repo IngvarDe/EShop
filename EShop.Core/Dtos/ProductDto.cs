@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 
 namespace EShop.Core.Dtos
 {
@@ -15,9 +15,10 @@ namespace EShop.Core.Dtos
         public decimal Value { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
-        //public List<IFormFile> Files { get; set; }
+        public List<IFormFile> Files { get; set; }
         public IFormFile File { get; set; }
         public string ExistingFilePath { get; set; }
+        public IEnumerable<ExistingFilePathDto> ExistingFilePaths { get; set; } = new List<ExistingFilePathDto>();
 
 
         public static ProductDto FromProduct(Product product)
@@ -30,7 +31,11 @@ namespace EShop.Core.Dtos
                 Value = product.Value,
                 CreatedAt = product.CreatedAt,
                 ModifiedAt = product.ModifiedAt,
-                ExistingFilePath = product.ExistingFilePath
+                ExistingFilePaths = product.ExistingFilePaths.Select(x => new ExistingFilePathDto
+                {
+                    Id = x.Id,
+                    FilePath = x.FilePath
+                }).ToArray()
             };
         }
 
