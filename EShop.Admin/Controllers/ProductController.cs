@@ -8,6 +8,7 @@ using EShop.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using EShop.Admin.Controllers;
+using Microsoft.EntityFrameworkCore;
 
 public class ProductController : BaseController
 {
@@ -63,8 +64,15 @@ public class ProductController : BaseController
             Value = model.Value,
             ModifiedAt = model.ModifiedAt,
             CreatedAt = model.CreatedAt,
-            File = model.File,
-            ExistingFilePath = model.ExistingFilePath
+            Files = model.Files,
+            ExistingFilePaths = model.ExistingFilePaths.Select(x => new ExistingFilePathDto
+                {
+                    Id = x.Id,
+                    //Files = x.Files,
+                    ExistingFilePath = x.ExistingFilePath,
+                    ProductId = x.ProductId
+            }).ToArray()
+            //ExistingFilePath = model.ExistingFilePath
         };
 
         var result = await _productService.Add(dto);
@@ -86,21 +94,41 @@ public class ProductController : BaseController
             return NotFound();
         }
 
-        var model = new ProductViewModel
-        {
-            Id = product.Id,
-            Description = product.Description,
-            Name = product.Name,
-            Value = product.Value,
-            CreatedAt = product.CreatedAt,
-            ModifiedAt = product.ModifiedAt,
-            ExistingFilePaths = product.ExistingFilePaths.Select(x => new ExistingFilePathViewModel
+        var photos = await _context.ExistingFilePath
+            .Where(x => x.ProductId == id)
+            .Select(m => new ExistingFilePathViewModel
             {
-                Id = x.Id,
-                FilePath = x.FilePath
-            }).ToArray()
-            //ExistingFilePath = product.ExistingFilePath
-        };
+                ExistingFilePath = m.FilePath
+            })
+            .ToArrayAsync();
+
+
+        //var model = new ProductViewModel
+        //{
+        //    Id = product.Id,
+        //    Description = product.Description,
+        //    Name = product.Name,
+        //    Value = product.Value,
+        //    CreatedAt = product.CreatedAt,
+        //    ModifiedAt = product.ModifiedAt,
+        //    ExistingFilePaths = product.ExistingFilePaths.Select(x => new ExistingFilePathViewModel
+        //    {
+        //        Id = x.Id,
+        //        ExistingFilePath = x.FilePath
+        //    }).ToArray()
+        //    //ExistingFilePath = product.ExistingFilePath
+        //};
+
+        var model = new ProductViewModel();
+
+        model.Id = product.Id;
+        model.Description = product.Description;
+        model.Name = product.Name;
+        model.Value = product.Value;
+        model.CreatedAt = product.CreatedAt;
+        model.ModifiedAt = product.ModifiedAt;
+        model.ExistingFilePaths.AddRange(photos);
+
 
         return View(model);
     }
@@ -116,11 +144,13 @@ public class ProductController : BaseController
             Value = model.Value,
             ModifiedAt = model.ModifiedAt,
             CreatedAt = model.CreatedAt,
-            File = model.File,
+            Files = model.Files,
             ExistingFilePaths = model.ExistingFilePaths.Select(x => new ExistingFilePathDto
             { 
                 Id = x.Id,
-                FilePath = x.FilePath
+                //Files = x.Files,
+                ExistingFilePath = x.ExistingFilePath,
+                ProductId = x.ProductId
             })
             //ExistingFilePath = model.ExistingFilePath
         };

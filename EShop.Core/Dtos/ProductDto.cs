@@ -34,7 +34,8 @@ namespace EShop.Core.Dtos
                 ExistingFilePaths = product.ExistingFilePaths.Select(x => new ExistingFilePathDto
                 {
                     Id = x.Id,
-                    FilePath = x.FilePath
+                    ExistingFilePath = x.FilePath,
+                    ProductId = x.ProductId
                 }).ToArray()
             };
         }
