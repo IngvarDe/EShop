@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using EShop.Admin.Controllers;
 using Microsoft.EntityFrameworkCore;
 
+
 public class ProductController : BaseController
 {
     private readonly IProductService _productService;
@@ -67,12 +68,10 @@ public class ProductController : BaseController
             Files = model.Files,
             ExistingFilePaths = model.ExistingFilePaths.Select(x => new ExistingFilePathDto
                 {
-                    Id = x.Id,
-                    //Files = x.Files,
-                    ExistingFilePath = x.ExistingFilePath,
+                    Id = x.PhotoId,
+                    ExistingFilePath = x.FilePath,
                     ProductId = x.ProductId
             }).ToArray()
-            //ExistingFilePath = model.ExistingFilePath
         };
 
         var result = await _productService.Add(dto);
@@ -98,26 +97,10 @@ public class ProductController : BaseController
             .Where(x => x.ProductId == id)
             .Select(m => new ExistingFilePathViewModel
             {
-                ExistingFilePath = m.FilePath
+                FilePath = m.FilePath,
+                PhotoId = m.Id
             })
             .ToArrayAsync();
-
-
-        //var model = new ProductViewModel
-        //{
-        //    Id = product.Id,
-        //    Description = product.Description,
-        //    Name = product.Name,
-        //    Value = product.Value,
-        //    CreatedAt = product.CreatedAt,
-        //    ModifiedAt = product.ModifiedAt,
-        //    ExistingFilePaths = product.ExistingFilePaths.Select(x => new ExistingFilePathViewModel
-        //    {
-        //        Id = x.Id,
-        //        ExistingFilePath = x.FilePath
-        //    }).ToArray()
-        //    //ExistingFilePath = product.ExistingFilePath
-        //};
 
         var model = new ProductViewModel();
 
@@ -128,7 +111,6 @@ public class ProductController : BaseController
         model.CreatedAt = product.CreatedAt;
         model.ModifiedAt = product.ModifiedAt;
         model.ExistingFilePaths.AddRange(photos);
-
 
         return View(model);
     }
@@ -146,13 +128,11 @@ public class ProductController : BaseController
             CreatedAt = model.CreatedAt,
             Files = model.Files,
             ExistingFilePaths = model.ExistingFilePaths.Select(x => new ExistingFilePathDto
-            { 
-                Id = x.Id,
-                //Files = x.Files,
-                ExistingFilePath = x.ExistingFilePath,
+            {
+                Id = x.PhotoId,
+                ExistingFilePath = x.FilePath,
                 ProductId = x.ProductId
             })
-            //ExistingFilePath = model.ExistingFilePath
         };
 
         var result = await _productService.Update(dto);
@@ -165,31 +145,22 @@ public class ProductController : BaseController
         return RedirectToAction("index", model);
     }
 
-    //private IActionResult Save(ProductViewModel model, bool isNew = false)
-    //{
-    //    var dto = new ProductDto()
-    //    {
-    //        Id = model.Id,
-    //        Description = model.Description,
-    //        Name = model.Name,
-    //        Value = model.Value,
-    //        ModifiedAt = model.ModifiedAt,
-    //        CreatedAt = model.CreatedAt,
-    //        File = model.File,
-    //        ExistingFilePath = model.ExistingFilePath
-    //    };
+    [HttpPost]
+    public async Task<IActionResult> RemoveImage(ExistingFilePathViewModel file)
+    {
+        var dto = new ExistingFilePathDto()
+        {
+            Id = file.PhotoId,
+        };
 
-    //    var result = isNew
-    //        ? _productService.Add(dto)
-    //        : _productService.Update(dto);
+        var photo = await _productService.RemoveImage(dto);
+        if (photo == null)
+        {
+            return RedirectToAction(nameof(Index));
+        }
 
-    //    if (result == null)
-    //    {
-    //        return RedirectToAction(nameof(Index));
-    //    }
-
-    //    return RedirectToAction("index", model); //dosent refresh the imageFile
-    //}
+        return RedirectToAction(nameof(Index));
+    }
 
     [HttpPost]
     public async Task<IActionResult> Delete(Guid id)
@@ -197,7 +168,7 @@ public class ProductController : BaseController
         var product = await _productService.Delete(id);
         if (product == null)
         {
-            return RedirectToAction(nameof(Edit));
+            return RedirectToAction(nameof(Index));
         }
 
         return RedirectToAction(nameof(Index), product);

@@ -8,7 +8,7 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
-using System.Linq;
+
 
 namespace EShop.ApplicationServices.Products
 {
@@ -52,8 +52,8 @@ namespace EShop.ApplicationServices.Products
 
         public async Task<Product> Update(ProductDto dto)
         {
-            //string uniqueFileName = null;
             Product product = new Product();
+            ExistingFilePath file = new ExistingFilePath();
 
             product.Id = dto.Id;
             product.Name = dto.Name;
@@ -64,12 +64,7 @@ namespace EShop.ApplicationServices.Products
 
             if (dto.Files != null)
             {
-                if (dto.ExistingFilePaths != null)
-                {
-                    string filePath = Path.Combine(_env.WebRootPath, "multipleFileUpload", dto.ExistingFilePath);
-                    File.Delete(filePath);
-                }
-                product.ExistingFilePath = ProcessUploadedFile(dto, product);
+                file.FilePath = ProcessUploadedFile(dto, product);
             }
 
             _context.Product.Update(product);
@@ -118,6 +113,18 @@ namespace EShop.ApplicationServices.Products
             }
 
             return uniqueFileName;
+        }
+
+
+        public async Task<ExistingFilePath> RemoveImage(ExistingFilePathDto dto)
+        {
+            var photoId = await _context.ExistingFilePath
+                .FirstOrDefaultAsync(x => x.Id == dto.Id);
+
+            _context.ExistingFilePath.Remove(photoId);
+            await _context.SaveChangesAsync();
+
+            return photoId;
         }
     }
 }

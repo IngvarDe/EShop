@@ -12,7 +12,6 @@ namespace EShop.Core.Domain
         public decimal Value { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
-        public string ExistingFilePath { get; set; }
 
         public IEnumerable<ExistingFilePath> ExistingFilePaths { get; set; } = new List<ExistingFilePath>();
     }

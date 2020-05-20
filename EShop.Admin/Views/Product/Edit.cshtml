@@ -1,8 +1,5 @@
 ﻿@model EShop.Admin.Models.Product.ProductViewModel
 
-@{
-    var photoPaths = "~/multipleFileUpload/" + (Model.ExistingFilePath ?? "noimage.jpg");
-}
 
 @if (Model.Id.HasValue)
 {
@@ -12,8 +9,6 @@ else
 {
     <h1>Add</h1>
 }
-
-
 
 <div>
     <form method="post" enctype="multipart/form-data">
@@ -45,17 +40,10 @@ else
             </div>
         </div>
 
-
         @foreach (var photo in Model.ExistingFilePaths)
         {
-            @*<div class="form-group row col-sm-4 offset-2">
-                <img class="card-img-top" src="@photo.ExistingFilePath" asp-append-version="true" />
-            </div>*@
-
             <partial name="_Photo" model="photo" />
         }
-        @*<partial name="_Photo" />*@
-
 
         <div class="form-group row">
             <label asp-for="Value" class="col-sm-2 col-form-label"></label>

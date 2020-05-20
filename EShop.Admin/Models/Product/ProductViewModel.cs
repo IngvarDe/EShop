@@ -12,17 +12,14 @@ namespace EShop.Admin.Models.Product
         public decimal Value { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
-        public IFormFile File { get; set; }
         public List<IFormFile> Files { get; set; }
-        public string ExistingFilePath { get; set; }
         public List<ExistingFilePathViewModel> ExistingFilePaths { get; set; } = new List<ExistingFilePathViewModel>();
     }
 
     public class ExistingFilePathViewModel
     {
-        public Guid Id { get; set; }
-        //public List<IFormFile> Files { get; set; }
-        public string ExistingFilePath { get; set; }
+        public Guid PhotoId { get; set; }
+        public string FilePath { get; set; }
         public Guid ProductId { get; set; }
     }
 }
