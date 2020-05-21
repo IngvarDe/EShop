@@ -1,5 +1,6 @@
-﻿using System;
-
+﻿using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
 
 namespace EShop.Admin.Models.Product
 {
@@ -11,5 +12,14 @@ namespace EShop.Admin.Models.Product
         public decimal Value { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
+        public List<IFormFile> Files { get; set; }
+        public List<ExistingFilePathViewModel> ExistingFilePaths { get; set; } = new List<ExistingFilePathViewModel>();
+    }
+
+    public class ExistingFilePathViewModel
+    {
+        public Guid PhotoId { get; set; }
+        public string FilePath { get; set; }
+        public Guid ProductId { get; set; }
     }
 }

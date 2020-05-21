@@ -12,5 +12,6 @@ namespace EShop.Core.ServiceInterface
         Task<Product> Add(ProductDto dto);
         Task<Product> Update(ProductDto dto);
         Task<Product> Delete(Guid id);
+        Task<ExistingFilePath> RemoveImage(ExistingFilePathDto dto);
     }
 }

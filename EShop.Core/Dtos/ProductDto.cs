@@ -1,8 +1,9 @@
 ﻿using EShop.Core.Domain;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading.Tasks;
 
 namespace EShop.Core.Dtos
 {
@@ -14,6 +15,8 @@ namespace EShop.Core.Dtos
         public decimal Value { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
+        public List<IFormFile> Files { get; set; }
+        public IEnumerable<ExistingFilePathDto> ExistingFilePaths { get; set; } = new List<ExistingFilePathDto>();
 
 
         public static ProductDto FromProduct(Product product)
@@ -23,7 +26,15 @@ namespace EShop.Core.Dtos
                 Id = product.Id,
                 Name = product.Name,
                 Description = product.Description,
-                Value = product.Value
+                Value = product.Value,
+                CreatedAt = product.CreatedAt,
+                ModifiedAt = product.ModifiedAt,
+                ExistingFilePaths = product.ExistingFilePaths.Select(x => new ExistingFilePathDto
+                {
+                    Id = x.Id,
+                    ExistingFilePath = x.FilePath,
+                    ProductId = x.ProductId
+                }).ToArray()
             };
         }
 
