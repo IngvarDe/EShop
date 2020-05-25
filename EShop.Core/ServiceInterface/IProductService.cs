@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EShop.Core.ServiceInterface
 {
-    public interface IProductService
+    public interface IProductService : IApplicationService
     {
         Task<Product> GetAsync(Guid id);
         Task<Product> Add(ProductDto dto);
