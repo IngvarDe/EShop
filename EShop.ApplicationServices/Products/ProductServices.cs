@@ -1,7 +1,6 @@
 ﻿using EShop.Core.Domain;
 using EShop.Core.Dtos;
 using EShop.Core.ServiceInterface;
-using EShop.Core.ServiceResult;
 using EShop.Data;
 using Microsoft.EntityFrameworkCore;
 using System;

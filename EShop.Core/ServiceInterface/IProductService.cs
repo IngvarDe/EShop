@@ -1,6 +1,5 @@
 ﻿using EShop.Core.Domain;
 using EShop.Core.Dtos;
-using EShop.Core.ServiceResult;
 using System;
 using System.Threading.Tasks;
 
