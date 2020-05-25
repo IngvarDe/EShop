@@ -12,6 +12,6 @@ namespace EShop.Data
 
         public DbSet<Product> Product { get; set; }
         public DbSet<ExistingFilePath> ExistingFilePath { get; set; }
-        public DbSet<Spaceship> Spaceship { get; set; }
+        //public DbSet<Spaceship> Spaceship { get; set; }
     }
 }
