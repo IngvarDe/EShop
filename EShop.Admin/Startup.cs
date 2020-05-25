@@ -33,6 +33,7 @@ namespace EShop.Admin
             services.AddDbContext<EShopDbContext>(options => options.UseSqlServer(_config["DefaultConnection"]/*, x => x.MigrationsAssembly("ShopUI")*/));
 
             services.AddScoped<IProductService, ProductsService>();
+            services.AddScoped<ISpaceshipService, SapceshipServices>();
 
             services.AddControllersWithViews();
         }
