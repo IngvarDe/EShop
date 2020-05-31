@@ -7,7 +7,7 @@ namespace EShop.Admin.Models.Spaceship
 {
     public class SpaceshipGridListItem
     {
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         public int CrewSize { get; set; }
         public string Armament { get; set; }
         public string Role { get; set; }

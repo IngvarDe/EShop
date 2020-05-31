@@ -1,33 +1,21 @@
 ﻿@model IEnumerable<EShop.Admin.Models.Spaceship.SpaceshipGridListItem>
 
-
 @{
     ViewData["Title"] = "Index";
-    @*@int queueNumber = 0;*@
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    int queueNumber = 0;
 }
 
-<h1>List of spaceships</h1>
 
-@*<div class="card">
-        <div class="card-header">
-            No spaceships created yet
-        </div>
-        <div class="card-body">
-            <h5 class="card-title">
-                Create new spaceship
-            </h5>
-            <a class="btn btn-primary" style="width:auto" asp-controller="spaceships" asp-action="register">
-                Add new spaceship
-            </a>
-        </div>
-    </div>*@
-
+<div class="m-1">
+    <a asp-action="add" asp-controller="spaceship" type="submit" class="btn btn-primary">Add</a>
+</div>
 <form method="post">
     <table class="table table-hover">
         <thead>
             <tr>
                 <th scope="col">Nr</th>
-                <th scope="col">Crew size</th>
+                <th scope="col">Crew Size</th>
                 <th scope="col">Armament</th>
                 <th scope="col">Role</th>
                 <th scope="col"></th>
@@ -36,9 +24,9 @@
         <tbody>
             @foreach (var product in Model)
             {
-                //queueNumber += 1;
+                queueNumber += 1;
                 <tr>
-                    <th scope="row"></th>
+                    <th scope="row">@queueNumber</th>
                     <td class="">@product.CrewSize</td>
                     <td class="">@product.Armament</td>
                     <td class="">@product.Role</td>

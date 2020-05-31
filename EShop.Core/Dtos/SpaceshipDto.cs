@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EShop.Core.Domain
+namespace EShop.Core.Dtos
 {
-    public class Spaceship
+    public class SpaceshipDto
     {
         public Guid Id { get; set; }
         //public string Name { get; set; }
@@ -13,7 +13,6 @@ namespace EShop.Core.Domain
         public string Role { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
-
-        public IEnumerable<FileToDatabase> Images { get; set; } = new List<FileToDatabase>();
+        public IEnumerable<FileToDatabase> Image { get; set; } = new List<FileToDatabase>();
     }
 }

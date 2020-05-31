@@ -4,7 +4,7 @@ using System.Text;
 
 namespace EShop.Core.ServiceInterface
 {
-    public interface ISpaceshipService
+    public interface ISpaceshipService : IApplicationService
     {
     }
 }

@@ -19,21 +19,21 @@ namespace EShop.Admin.Controllers
             _context = context;
         }
 
-
+        //Grid
         [HttpGet]
         public IActionResult Index()
         {
-            //var seed = _context.Spaceship
-            //    .OrderByDescending(y => y.CreatedAt)
-            //    .Select(x => new SpaceshipGridListItem
-            //    {
-            //        Id = x.Id,
-            //        CrewSize = x.CrewSize,
-            //        Armament = x.Armament,
-            //        Role = x.Role
-            //    });
+            var seed = _context.Spaceship
+                .OrderByDescending(y => y.CreatedAt)
+                .Select(x => new SpaceshipGridListItem
+                {
+                    Id = x.Id,
+                    CrewSize = x.CrewSize,
+                    Armament = x.Armament,
+                    Role = x.Role
+                });
 
-            return View();
+            return View(seed);
         }
     }
 }
