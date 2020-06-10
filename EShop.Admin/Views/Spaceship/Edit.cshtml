@@ -43,18 +43,25 @@ else
         </div>
 
         <div class="form-group row">
-            <label asp-for="Image" class="col-sm-2 col-form-label"></label>
+            <label asp-for="Files" class="col-sm-2 col-form-label"></label>
             <div class="col-sm-5">
                 <div class="custom-file">
-                    <input class="form-control custom-file-input" asp-for="Image" multiple type="file" />
+                    <input class="form-control custom-file-input" asp-for="Files" multiple type="file" />
                     <label class="custom-file-label">Choose File...</label>
                 </div>
             </div>
         </div>
 
+        @*<div class="form-group">
+            <div class="col-md-10">
+                <p>Upload file</p>
+                <input class="form-control" name="files" type="file" />
+            </div>
+        </div>*@
+
         @foreach (var image in Model.Image)
         {
-            <partial name="_Image" model="image" />
+            <partial name="_Images" model="image" />
         }
 
         @*<div class="form-group row">
@@ -66,26 +73,33 @@ else
 
         @if (Model.Id.HasValue)
         {
-            <input asp-action="edit" asp-controller="product" type="submit" class="btn btn-primary" value="Update">
-            <input asp-action="delete" asp-controller="product" asp-for="Id" type="submit" class="btn btn-danger" value="Delete">
+            <input asp-action="edit" asp-controller="spaceship" type="submit" class="btn btn-primary" value="Update">
+            <input asp-action="delete" asp-controller="spaceship" asp-for="Id" type="submit" class="btn btn-danger" value="Delete">
         }
         else
         {
-            <input asp-action="add" asp-controller="product" type="submit" class="btn btn-primary" value="Add">
+            <input asp-action="add" asp-controller="spaceship" type="submit" class="btn btn-primary" value="Add">
         }
         <a asp-action="index" class="btn btn-primary">Index</a>
 
     </form>
 </div>
 
-
-@*<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Edit</title>
-</head>
-<body>
-</body>
-</html>*@
+@section Scripts 
+{
+    <script>
+        $(document).ready(function () {
+            $('.custom-file-input').on("change", function () {
+                var fileLabel = $(this).next('.custom-file-label');
+                var files = $(this)[0].files;
+                if (files.length > 1) {
+                    fileLabel.html(files.length + 'files selected');
+                }
+                else if (files.length == 1) {
+                    fileLabel.html(files[0].name);
+                }
+                
+                });
+            });
+    </script>
+}

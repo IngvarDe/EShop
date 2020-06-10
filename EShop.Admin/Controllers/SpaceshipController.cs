@@ -3,20 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EShop.Admin.Models.Spaceship;
+using EShop.Core.Dtos;
+using EShop.Core.ServiceInterface;
 using EShop.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EShop.Admin.Controllers
 {
     public class SpaceshipController : Controller
     {
         private readonly EShopDbContext _context;
+        private readonly ISpaceshipService _spaceshipService;
 
         public SpaceshipController(
-            EShopDbContext context
+            EShopDbContext context,
+            ISpaceshipService spaceshipService
             )
         {
             _context = context;
+            _spaceshipService = spaceshipService;
         }
 
         //Grid
@@ -34,6 +40,78 @@ namespace EShop.Admin.Controllers
                 });
 
             return View(seed);
+        }
+
+        [HttpGet]
+        public IActionResult Add()
+        {
+            SpaceshipViewModel model = new SpaceshipViewModel();
+
+            return View("Edit", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add(SpaceshipViewModel model)
+        {
+            var dto = new SpaceshipDto
+            {
+                Id = model.Id,
+                CrewSize = model.CrewSize,
+                Armament = model.Armament,
+                Role = model.Role,
+                CreatedAt = model.CreatedAt,
+                ModifiedAt = model.ModifiedAt,
+                Files = model.Files,
+                Image = model.Image.Select(x => new FileToDatabaseDto
+                {
+                    Id = x.Id,
+                    ImageData = x.ImageData,
+                    ImageTitle = x.ImageTitle,
+                    SpaceshipId = x.SpaceshipId
+                }).ToArray()
+            };
+
+            var result = await _spaceshipService.Add(dto);
+
+            if (result == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction("index", model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var spaceship = await _spaceshipService.GetAsync(id);
+
+            if (spaceship == null)
+            {
+                return NotFound();
+            }
+
+            var photos = await _context.FileToDatabase
+                .Where(x => x.SpaceshipId == id)
+                .Select(m => new ImagesViewModel
+                {
+                    ImageData = m.ImageData,
+                    ImageTitle = m.ImageTitle,
+                    SpaceshipId = m.SpaceshipId
+                })
+                .ToArrayAsync();
+
+            var model = new SpaceshipViewModel();
+
+            model.Id = spaceship.Id;
+            model.CrewSize = spaceship.CrewSize;
+            model.Armament = spaceship.Armament;
+            model.Role = spaceship.Role;
+            model.CreatedAt = spaceship.CreatedAt;
+            model.ModifiedAt = spaceship.ModifiedAt;
+            model.Image.AddRange(photos);
+
+            return View(model);
         }
     }
 }

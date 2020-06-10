@@ -1,12 +1,18 @@
-﻿@model EShop.Admin.Models.Spaceship.Images
+﻿@model EShop.Admin.Models.Spaceship.ImagesViewModel
 
 @{
-//var images = "~/multipleFileUpload/" + (Model.ImageData ?? "noimage.jpg");
+    //var images = "~/multipleFileUpload/" + (Model.ImageData ?? "noimage.jpg");
 }
 
+@*<div class="form-group">
+        <div class="col-md-10">
+            <p>Upload file</p>
+            <input class="form-control" name="files" type="file" />
+        </div>
+    </div>*@
 
 Images to database
 @*<div class="form-group row col-sm-4 offset-2">
-    <img class="card-img-top" src="@photoPaths" asp-append-version="true" />
-    <input asp-action="removeimage" asp-controller="product" asp-route-photoId="@Model.PhotoId" type="submit" class="btn btn-danger" value="Remove Image" />
+    <img class="card-img-top" src="" asp-append-version="true" />
+    <input asp-action="removeimage" asp-controller="spaceship" asp-route-id="@Model.Id" type="submit" class="btn btn-danger" value="Remove Image" />
 </div>*@
