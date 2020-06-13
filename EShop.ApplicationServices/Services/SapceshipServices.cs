@@ -23,6 +23,7 @@ namespace EShop.ApplicationServices.Services
         public async Task<Spaceship> GetAsync(Guid id)
         {
             var result = await _context.Spaceship
+                .Include(y => y.Images)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             return result;
@@ -40,12 +41,10 @@ namespace EShop.ApplicationServices.Services
             spaceship.CreatedAt = dto.CreatedAt;
             spaceship.ModifiedAt = dto.ModifiedAt;
 
-            //todo sapceship file update method
             if (dto.Files != null)
             {
                 file.ImageData = UploadFile(dto, spaceship);
             }
-
 
             await _context.Spaceship.AddAsync(spaceship);
             await _context.SaveChangesAsync();
@@ -54,13 +53,11 @@ namespace EShop.ApplicationServices.Services
 
         public byte[] UploadFile(SpaceshipDto dto, Spaceship spaceship)
         {
-            string fileName = null;
 
             if (dto.Files != null && dto.Files.Count > 0)
             {
                 foreach (var photo in dto.Files)
                 {
-                    fileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
 
                     using (var target = new MemoryStream())
                     {
@@ -68,13 +65,12 @@ namespace EShop.ApplicationServices.Services
                         FileToDatabase objfiles = new FileToDatabase
                         {
                             Id = Guid.NewGuid(),
-                            ImageTitle = fileName,
+                            ImageTitle = photo.FileName,
                             ImageData = target.ToArray(),
                             SpaceshipId = spaceship.Id
                         };
 
                         photo.CopyTo(target);
-                        objfiles.ImageData = target.ToArray();
 
                         _context.FileToDatabase.Add(objfiles);
                     }
@@ -82,26 +78,5 @@ namespace EShop.ApplicationServices.Services
             }
             return null;
         }
-
-        //public static byte[] FileToDatabase(SpaceshipDto dto)
-        //{
-        //    foreach (var file in dto.Image)
-        //    {
-        //        FileToDatabaseDto img = new FileToDatabaseDto();
-
-        //        MemoryStream ms = new MemoryStream();
-        //        file.CopyTo(ms);
-        //        img.ImageData = ms.ToArray();
-
-        //        ms.Close();
-        //        ms.Dispose();
-
-        //        _context.FileToDatabase.Add(img);
-
-        //    }
-
-        //    return null;
-        //}
-
     }
 }

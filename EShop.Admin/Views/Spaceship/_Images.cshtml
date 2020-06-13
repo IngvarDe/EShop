@@ -1,18 +1,12 @@
 ﻿@model EShop.Admin.Models.Spaceship.ImagesViewModel
 
 @{
-    //var images = "~/multipleFileUpload/" + (Model.ImageData ?? "noimage.jpg");
+    var base64 = Convert.ToBase64String(Model.ImageData);
+    var imgsrc = string.Format("data:image/gif;base64,{0}", base64);
 }
 
-@*<div class="form-group">
-        <div class="col-md-10">
-            <p>Upload file</p>
-            <input class="form-control" name="files" type="file" />
-        </div>
-    </div>*@
-
-Images to database
-@*<div class="form-group row col-sm-4 offset-2">
-    <img class="card-img-top" src="" asp-append-version="true" />
+<div class="form-group row col-sm-4 offset-2">
+    <div>@Model.ImageTitle</div>
+    <img class="card-img-top" src="@Model.Image" asp-append-version="true" />
     <input asp-action="removeimage" asp-controller="spaceship" asp-route-id="@Model.Id" type="submit" class="btn btn-danger" value="Remove Image" />
-</div>*@
+</div>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EShop.Admin.Models.Spaceship;
+using EShop.Core.Domain;
 using EShop.Core.Dtos;
 using EShop.Core.ServiceInterface;
 using EShop.Data;
@@ -96,6 +97,7 @@ namespace EShop.Admin.Controllers
                 .Select(m => new ImagesViewModel
                 {
                     ImageData = m.ImageData,
+                    Image = string.Format("data:image/gif;base64,{0}", Convert.ToBase64String(m.ImageData)),
                     ImageTitle = m.ImageTitle,
                     SpaceshipId = m.SpaceshipId
                 })
