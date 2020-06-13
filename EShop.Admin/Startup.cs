@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
-
+using EShop.ApplicationServices.Services;
 
 namespace EShop.Admin
 {
@@ -30,9 +30,13 @@ namespace EShop.Admin
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-            services.AddDbContext<EShopDbContext>(options => options.UseSqlServer(_config["DefaultConnection"]/*, x => x.MigrationsAssembly("ShopUI")*/));
+            //services.AddDbContextPool<EShopDbContext>(
+            //    options => options.UseSqlServer(_config.GetConnectionString("EShopDBConnection")));
+
+            services.AddDbContext<EShopDbContext>(options => options.UseSqlServer(_config["DefaultConnection"]/*, x => x.MigrationsAssembly("EShop")*/));
 
             services.AddScoped<IProductService, ProductsService>();
+            services.AddScoped<ISpaceshipService, SapceshipServices>();
 
             services.AddControllersWithViews();
         }
