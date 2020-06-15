@@ -4,14 +4,16 @@ using EShop.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EShop.Data.Migrations
 {
     [DbContext(typeof(EShopDbContext))]
-    partial class EShopDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200525091811_Spaceship")]
+    partial class Spaceship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,28 +38,6 @@ namespace EShop.Data.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ExistingFilePath");
-                });
-
-            modelBuilder.Entity("EShop.Core.Domain.FileToDatabase", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte[]>("ImageData")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("ImageTitle")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("SpaceshipId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SpaceshipId");
-
-                    b.ToTable("FileToDatabase");
                 });
 
             modelBuilder.Entity("EShop.Core.Domain.Product", b =>
@@ -313,13 +293,6 @@ namespace EShop.Data.Migrations
                     b.HasOne("EShop.Core.Domain.Product", null)
                         .WithMany("ExistingFilePaths")
                         .HasForeignKey("ProductId");
-                });
-
-            modelBuilder.Entity("EShop.Core.Domain.FileToDatabase", b =>
-                {
-                    b.HasOne("EShop.Core.Domain.Spaceship", null)
-                        .WithMany("Images")
-                        .HasForeignKey("SpaceshipId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
