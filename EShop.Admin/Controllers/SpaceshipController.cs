@@ -65,7 +65,7 @@ namespace EShop.Admin.Controllers
                 Files = model.Files,
                 Image = model.Image.Select(x => new FileToDatabaseDto
                 {
-                    Id = x.Id,
+                    Id = x.ImageId,
                     ImageData = x.ImageData,
                     ImageTitle = x.ImageTitle,
                     SpaceshipId = x.SpaceshipId
@@ -97,9 +97,10 @@ namespace EShop.Admin.Controllers
                 .Select(m => new ImagesViewModel
                 {
                     ImageData = m.ImageData,
+                    ImageId = m.Id,
                     Image = string.Format("data:image/gif;base64,{0}", Convert.ToBase64String(m.ImageData)),
                     ImageTitle = m.ImageTitle,
-                    SpaceshipId = m.SpaceshipId
+                    SpaceshipId = m.Id
                 })
                 .ToArrayAsync();
 
@@ -114,6 +115,66 @@ namespace EShop.Admin.Controllers
             model.Image.AddRange(photos);
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(SpaceshipViewModel model)
+        {
+            var dto = new SpaceshipDto()
+            {
+                Id = model.Id,
+                CrewSize = model.CrewSize,
+                Armament = model.Armament,
+                Role = model.Role,
+                CreatedAt = model.CreatedAt,
+                ModifiedAt = model.ModifiedAt,
+                Files = model.Files,
+                Image = model.Image.Select(x => new FileToDatabaseDto
+                {
+                    Id = x.ImageId,
+                    ImageData = x.ImageData,
+                    ImageTitle = x.ImageTitle,
+                    SpaceshipId = x.SpaceshipId
+                })
+            };
+
+            var result = await _spaceshipService.Update(dto);
+
+            if (result == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction("index", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var sapceship = await _spaceshipService.Delete(id);
+            if (sapceship == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index), sapceship);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RemoveImage(ImagesViewModel file)
+        {
+            var dto = new FileToDatabaseDto()
+            {
+                Id = file.ImageId,
+            };
+
+            var image = await _spaceshipService.RemoveImage(dto);
+            if (image == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
