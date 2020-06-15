@@ -56,19 +56,19 @@ else
             Images
         </div>
 
-        @foreach (var image in Model.Image)
+        @foreach (var images in Model.Image)
         {
-        <partial name="_Images" model="image" />
+            <partial name="_Images" model="images" />
         }
 
         @if (Model.Id.HasValue)
         {
-        <input asp-action="edit" asp-controller="spaceship" type="submit" class="btn btn-primary" value="Update">
-        <input asp-action="delete" asp-controller="spaceship" asp-for="Id" type="submit" class="btn btn-danger" value="Delete">
+            <input asp-action="edit" asp-controller="spaceship" type="submit" class="btn btn-primary" value="Update">
+            <input asp-action="delete" asp-controller="spaceship" asp-for="Id" type="submit" class="btn btn-danger" value="Delete">
         }
         else
         {
-        <input asp-action="add" asp-controller="spaceship" type="submit" class="btn btn-primary" value="Add">
+            <input asp-action="add" asp-controller="spaceship" type="submit" class="btn btn-primary" value="Add">
         }
         <a asp-action="index" class="btn btn-primary">Index</a>
 
