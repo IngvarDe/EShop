@@ -1,0 +1,44 @@
+﻿@model IEnumerable<EShop.Admin.Models.Spaceship.SpaceshipGridListItem>
+
+@{
+    ViewData["Title"] = "Index";
+    //Layout = "~/Views/Shared/_Layout.cshtml";
+    int queueNumber = 0;
+}
+
+
+<div class="m-1">
+    <a asp-action="add" asp-controller="spaceship" type="submit" class="btn btn-primary">Add</a>
+</div>
+<form method="post">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Nr</th>
+                <th scope="col">Crew Size</th>
+                <th scope="col">Armament</th>
+                <th scope="col">Role</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                queueNumber += 1;
+                <tr>
+                    <th scope="row">@queueNumber</th>
+                    <td class="">@product.CrewSize</td>
+                    <td class="">@product.Armament</td>
+                    <td class="">@product.Role</td>
+
+                    <td class="">
+                        <a asp-action="edit" asp-controller="spaceship" asp-route-id="@product.Id" class="btn btn-primary">Edit</a>
+                        <input asp-action="delete" asp-controller="spaceship" asp-route-id="@product.Id" type="submit" class="btn btn-danger" value="Delete">
+                    </td>
+                    <td class="">
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</form>
