@@ -3,20 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EShop.Admin.Models.Commander;
-using EShop.Core.Domain;
 using EShop.Core.ServiceInterface;
 using EShop.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EShop.Admin.Controllers
 {
-    public class CommandsController : Controller
+    [Route("commander")]
+    public class CommanderController : Controller
     {
-
         private readonly ICommander _commander;
         private readonly EShopDbContext _context;
 
-        public CommandsController(
+        public CommanderController(
             ICommander commander,
             EShopDbContext context
             )
@@ -39,23 +38,38 @@ namespace EShop.Admin.Controllers
             return View(seed);
         }
 
+        //[HttpGet]
+        //public IEnumerable<Command> GetAllCommands()
+        //{
+        //var commandItems = _commander.GetAppCommands();
+
+        //if (commandItems == null)
+        //{
+        //    return NotFound();
+        //}
+
+        //return null;
+        //}
+
         [HttpGet]
-        public IEnumerable<Command> GetAllCommands()
+        public async Task<IActionResult> GetById(Guid id)
         {
-            //var commandItems = _commander.GetAppCommands();
+            var command = await _commander.GetAsyncId(id);
 
-            //if (commandItems == null)
-            //{
-            //    return NotFound();
-            //}
+            if (command == null)
+            {
+                return NotFound();
+            }
 
-            return null;
-        }
+            var model = new CommandViewModel()
+            {
+                Id = command.Id,
+                HowTo = command.HowTo,
+                Line = command.Line,
+                Platfrom = command.Platfrom
+            };
 
-        [HttpGet]
-        public async Task<Command> GetCommandById(Guid id)
-        {
-            return null;
+            return View(model);
         }
     }
 }
