@@ -1,4 +1,5 @@
 ﻿using EShop.Core.Domain;
+using EShop.Core.Dtos;
 using EShop.Core.ServiceInterface;
 using EShop.Data;
 using Microsoft.EntityFrameworkCore;
@@ -9,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace EShop.ApplicationServices.Services
 {
-    public class CommanderServices : ICommander
+    public class CommanderServices : ICommanderService
     {
         private readonly EShopDbContext _context;
 
-        CommanderServices(
+        public CommanderServices(
             EShopDbContext context
             )
         {
@@ -29,7 +30,47 @@ namespace EShop.ApplicationServices.Services
             return result;
         }
 
+        public async Task<Command> Update(CommanderDto dto)
+        {
+            var command = new Command()
+            {
+                Id = dto.Id,
+                HowTo = dto.HowTo,
+                Line = dto.Line,
+                Platfrom = dto.Platfrom
+            };
 
+            _context.Command.Update(command);
+            await _context.SaveChangesAsync();
+
+            return command;
+        }
+
+        public async Task<Command> Add(CommanderDto dto)
+        {
+            var command = new Command()
+            {
+                Id = Guid.NewGuid(),
+                HowTo = dto.HowTo,
+                Line = dto.Line,
+                Platfrom = dto.Platfrom
+            };
+
+            await _context.Command.AddAsync(command);
+            await _context.SaveChangesAsync();
+            return command;
+        }
+
+        public async Task<Command> Delete(Guid id)
+        {
+            var commander = await _context.Command
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            _context.Command.Remove(commander);
+            await _context.SaveChangesAsync();
+
+            return commander;
+        }
 
         //public IEnumerable<Command> GetAppCommands()
         //{

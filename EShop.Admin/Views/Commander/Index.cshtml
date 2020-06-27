@@ -6,8 +6,12 @@
     int queueNumber = 0;
 }
 
+<div>
+    REST, JSON and Postman test
+</div>
+
 <div class="m-1">
-    <a asp-action="add" asp-controller="commands" type="submit" class="btn btn-primary">Add</a>
+    <a asp-action="add" asp-controller="commander" type="submit" class="btn btn-primary">Add</a>
 </div>
 <form method="post">
     <table class="table table-hover">
@@ -31,8 +35,8 @@
                     <td class="">@command.Platfrom</td>
 
                     <td class="">
-                        <a asp-action="edit" asp-controller="commands" asp-route-id="@command.Id" class="btn btn-primary">Edit</a>
-                        <input asp-action="delete" asp-controller="commands" asp-route-id="@command.Id" type="submit" class="btn btn-danger" value="Delete">
+                        <a asp-action="edit" asp-controller="commander" asp-route-id="@command.Id" class="btn btn-primary">Edit</a>
+                        <input asp-action="delete" asp-controller="commander" asp-route-id="@command.Id" type="submit" class="btn btn-danger" value="Delete">
                     </td>
                     <td class="">
                     </td>

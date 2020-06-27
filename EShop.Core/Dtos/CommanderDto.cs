@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace EShop.Admin.Models.Commander
+namespace EShop.Core.Dtos
 {
-    public class CommandGridListItem
+    public class CommanderDto
     {
         public Guid? Id { get; set; }
         public string HowTo { get; set; }

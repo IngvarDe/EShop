@@ -1,12 +1,9 @@
-﻿
+﻿@model EShop.Admin.Models.Commander.CommandViewModel
+
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h1>Edit</h1>
-
-@model EShop.Admin.Models.Commander.CommandViewModel
 
 
 @if (Model.Id.HasValue)
@@ -22,7 +19,7 @@ else
     <form method="post" enctype="multipart/form-data">
         <input asp-for="Id" type="hidden" />
         @*<input asp-for="CreatedAt" type="hidden" />
-        <input asp-for="ModifiedAt" type="hidden" />*@
+            <input asp-for="ModifiedAt" type="hidden" />*@
 
         <div class="form-group row">
             <label asp-for="HowTo" class="col-sm-2 col-form-label"></label>

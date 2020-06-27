@@ -1,22 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EShop.Admin.Models.Commander;
+using EShop.Core.Dtos;
 using EShop.Core.ServiceInterface;
 using EShop.Data;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace EShop.Admin.Controllers
 {
-    [Route("commander")]
+    //[Route("commander")]
     public class CommanderController : Controller
     {
-        private readonly ICommander _commander;
+        private readonly ICommanderService _commander;
         private readonly EShopDbContext _context;
 
         public CommanderController(
-            ICommander commander,
+            ICommanderService commander,
             EShopDbContext context
             )
         {
@@ -24,6 +25,7 @@ namespace EShop.Admin.Controllers
             _context = context;
         }
 
+        //Grid
         public IActionResult Index()
         {
             var seed = _context.Command
@@ -38,21 +40,8 @@ namespace EShop.Admin.Controllers
             return View(seed);
         }
 
-        //[HttpGet]
-        //public IEnumerable<Command> GetAllCommands()
-        //{
-        //var commandItems = _commander.GetAppCommands();
-
-        //if (commandItems == null)
-        //{
-        //    return NotFound();
-        //}
-
-        //return null;
-        //}
-
         [HttpGet]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<IActionResult> Edit(Guid id)
         {
             var command = await _commander.GetAsyncId(id);
 
@@ -70,6 +59,64 @@ namespace EShop.Admin.Controllers
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(CommandViewModel model)
+        {
+            var dto = new CommanderDto()
+            {
+                Id = model.Id,
+                HowTo = model.HowTo,
+                Line = model.Line,
+                Platfrom = model.Platfrom
+            };
+
+            var result = await _commander.Update(dto);
+
+            if (result == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction("index", model);
+        }
+
+        [HttpGet]
+        public IActionResult Add()
+        {
+            CommandViewModel model = new CommandViewModel();
+
+            return View("Edit", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Add(CommandViewModel model)
+        {
+            var dto = new CommanderDto
+            {
+                Id = model.Id,
+                HowTo = model.HowTo,
+                Line = model.Line,
+                Platfrom = model.Platfrom
+            };
+
+            var result = await _commander.Add(dto);
+
+            if (result == null)
+            {
+                return RedirectToAction(nameof(Index));
+            }
+
+            return RedirectToAction("index", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var commander = await _commander.Delete(id);
+
+            return RedirectToAction("index", commander);
         }
     }
 }
