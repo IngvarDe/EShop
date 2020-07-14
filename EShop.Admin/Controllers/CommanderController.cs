@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EShop.Admin.Controllers
 {
-    //[Route("commander")]
     public class CommanderController : Controller
     {
         private readonly ICommanderService _commander;
