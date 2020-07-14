@@ -8,7 +8,7 @@ namespace EShop.Admin.Controllers
 {
     public class WeatherForecastController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Weather()
         {
             return View();
         }
