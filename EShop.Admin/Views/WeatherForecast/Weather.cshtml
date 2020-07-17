@@ -4,14 +4,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Api Call</h1>
+<div>Api Call, Ajax</div>
 <h1>Search City and Get Weather Forecast</h1>
 
 <div>
-    <strong>City Name :</strong><input id="txtCity" type="text" />
+    <strong>City Name : </strong><input class="form-control col-sm-3" id="txtCity" type="text" />
     <br />
     <br />
-    <button id="btnSubmit">Get Weather Forecast</button>
+    <button class="btn btn-success" id="btnSubmit">Get Weather Forecast</button>
 </div>
 
 <div>
@@ -61,7 +61,7 @@
         var cityname = $("#txtCity").val();
         if (cityname.length > 0) {
             $.ajax({
-                url: "http://localhost:52189/Home/WeatherDetail?City=" + cityname,
+                url: "http://localhost:52189/WeatherForecast/WeatherDetail?City=" + cityname,
                 type: "POST",
                 success: function (rsltval) {
                     var data = JSON.parse(rsltval);
