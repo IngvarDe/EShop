@@ -1,4 +1,5 @@
-﻿using Nancy.Json;
+﻿using EShop.Core.ServiceInterface;
+using Nancy.Json;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -7,7 +8,7 @@ using static EShop.Core.Dtos.WeatherForecastDto;
 
 namespace EShop.ApplicationServices.Services
 {
-    public class WeatherForecastServices
+    public class WeatherForecastServices : IWeatherForecastService
     {
         public string WeatherDetail(string City)
         {
@@ -25,13 +26,20 @@ namespace EShop.ApplicationServices.Services
 
                 result.Country = weatherInfo.Sys.Country;
                 result.City = weatherInfo.Name;
-                //result Lat
+                result.Lat = weatherInfo.Coord.Lat.ToString();
+                result.Lon = weatherInfo.Coord.Lon.ToString();
+                result.Description = weatherInfo.Weather[0].Description;
+                result.Humidity = weatherInfo.Main.Humidity.ToString();
+                result.Temp = weatherInfo.Main.Temp.ToString();
+                result.TempFeelsLike = weatherInfo.Main.Feels_Like.ToString();
+                result.TempMax = weatherInfo.Main.TempMax.ToString();
+                result.TempMin = weatherInfo.Main.TempMin.ToString();
+                result.WeatherIcon = weatherInfo.Weather[0].Icon;
 
-                return json;
+                var jsonString = new JavaScriptSerializer().Serialize(result);
+
+                return jsonString;
             }
-
-
-
         }
     }
 }

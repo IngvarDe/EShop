@@ -42,7 +42,8 @@ namespace EShop.Core.Dtos
         {
             public double Temp { get; set; }
             public double Feels_Like { get; set; }
-            public int Temp_Min { get; set; }
+            public int TempMin { get; set; }
+            public double TempMax { get; set; }
             public int Pressure { get; set; }
             public int Humidity { get; set; }
         }
@@ -69,15 +70,15 @@ namespace EShop.Core.Dtos
 
         public class RootObject
         {
-            public Coord Coord { get; set; }
-            public List<Weather> Weather { get; set; }
+            public CoordDto Coord { get; set; }
+            public List<WeatherDto> Weather { get; set; }
             public string @base { get; set; }
-            public Main Main { get; set; }
+            public MainDto Main { get; set; }
             public int Visibility { get; set; }
-            public Wind Wind { get; set; }
-            public Clouds Clouds { get; set; }
+            public WindDto Wind { get; set; }
+            public CloudsDto Clouds { get; set; }
             public int Dt { get; set; }
-            public Sys Sys { get; set; }
+            public SysDto Sys { get; set; }
             public int TimeZone { get; set; }
             public int Id { get; set; }
             public string Name { get; set; }
