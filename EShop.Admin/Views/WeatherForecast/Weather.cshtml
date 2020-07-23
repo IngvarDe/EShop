@@ -23,7 +23,7 @@
         <tr>
             <td>
                 <strong>City:</strong>
-                <span id="lblCity"></span> ,
+                <span id="lblCity"></span>
                 <span id="lblCountry"></span>
             </td>
         </tr>
@@ -61,7 +61,7 @@
         var cityname = $("#txtCity").val();
         if (cityname.length > 0) {
             $.ajax({
-                url: "http://localhost:52189/WeatherForecast/WeatherDetail?City=" + cityname,
+                url: "http://localhost:44347/WeatherForecast/WeatherDetail?City=" + cityname,
                 type: "POST",
                 success: function (rsltval) {
                     var data = JSON.parse(rsltval);

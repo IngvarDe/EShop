@@ -38,6 +38,7 @@ namespace EShop.Admin
             services.AddScoped<IProductService, ProductsService>();
             services.AddScoped<ISpaceshipService, SapceshipServices>();
             services.AddScoped<ICommanderService, CommanderServices>();
+            services.AddScoped<IWeatherForecastService, WeatherForecastServices>();
 
             services.AddControllersWithViews();
         }

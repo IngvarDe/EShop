@@ -1,4 +1,5 @@
-﻿using EShop.Core.ServiceInterface;
+﻿using EShop.Core.Dtos;
+using EShop.Core.ServiceInterface;
 using Nancy.Json;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace EShop.ApplicationServices.Services
     {
         public string WeatherDetail(string City)
         {
+            //string City = "";
             string appId = "8113fcc5a7494b0518bd91ef3acc074f";
 
             string url = string.Format("http://api.openweathermap.org/data/2.5/weather?q={0}&units=metric&cnt=1&APPID={1}", City, appId);
@@ -20,7 +22,7 @@ namespace EShop.ApplicationServices.Services
             {
                 string json = client.DownloadString(url);
 
-                RootObject weatherInfo = (new JavaScriptSerializer()).Deserialize<RootObject>(json);
+                WeatherForecastDto weatherInfo = (new JavaScriptSerializer()).Deserialize<WeatherForecastDto>(json);
 
                 ResultDto result = new ResultDto();
 
