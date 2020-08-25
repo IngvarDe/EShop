@@ -1,6 +1,10 @@
 ﻿using EShop.Core.Dtos;
+using EShop.Core.Dtos.WeatherForecast;
 using EShop.Core.ServiceInterface;
 using Nancy.Json;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -11,12 +15,13 @@ namespace EShop.ApplicationServices.Services
 {
     public class WeatherForecastServices : IWeatherForecastService
     {
-        public string WeatherDetail(string City)
-        {
-            //string City = "";
-            string appId = "8113fcc5a7494b0518bd91ef3acc074f";
 
-            string url = string.Format("http://api.openweathermap.org/data/2.5/weather?q={0}&units=metric&cnt=1&APPID={1}", City, appId);
+        //with ajax
+        public string WeatherDetail(string city)
+        {
+            string appId = "10802a322cab84354d59fb3e37ee800e";
+
+            string url = $"http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&cnt=1&APPID={appId}";
 
             using (WebClient client = new WebClient())
             {
@@ -42,6 +47,27 @@ namespace EShop.ApplicationServices.Services
 
                 return jsonString;
             }
+        }
+
+        //no ajax
+        WeatherResponseDto IWeatherForecastService.GetForecast(string city)
+        {
+            string IDOWeather = "10802a322cab84354d59fb3e37ee800e";
+            // Connection String
+            var client = new RestClient($"http://api.openweathermap.org/data/2.5/weather?q={city}&units=metric&APPID={IDOWeather}");
+            var request = new RestRequest(Method.GET);
+            IRestResponse response = client.Execute(request);
+
+            if (response.IsSuccessful)
+            {
+                // Deserialize the string content into JToken object
+                var content = JsonConvert.DeserializeObject<JToken>(response.Content);
+
+                // Deserialize the JToken object into our WeatherResponse Class
+                return content.ToObject<WeatherResponseDto>();
+            }
+
+            return null;
         }
     }
 }

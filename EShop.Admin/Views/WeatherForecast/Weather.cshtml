@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Weather";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -8,51 +7,53 @@
 <h1>Search City and Get Weather Forecast</h1>
 
 <div>
-    <strong>City Name : </strong><input class="form-control col-sm-3" id="txtCity" type="text" />
+    <strong>City Name: </strong><input class="form-control col-sm-3" id="txtCity" type="text" />
     <br />
     <br />
     <button class="btn btn-success" id="btnSubmit">Get Weather Forecast</button>
 </div>
 
-<div>
-    <h2>Weather Forecast</h2>
-    <table>
-        <tr>
-            <td>Weather Symbol Icon <img id="imageWeatherIconUrl" src="" title="Weather Icon" /></td>
-        </tr>
-        <tr>
-            <td>
-                <strong>City:</strong>
-                <span id="lblCity"></span>
-                <span id="lblCountry"></span>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <strong>Latitude: </strong>
-                <label id="lblLat"></label><br />
-                <strong>Longitude: </strong>
-                <label id="lblLon"></label>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <strong>Description:</strong>
-                <label id="lblDescription"></label><br />
-                <strong>Humidity:</strong>
-                <label id="lblHumidity"></label>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                Temperature (Feels Like)<label id="lblTempFeelsLike"></label><br />
-                Temperature <label id="lblTemp"></label><br />
-                Temperature (Min)<label id="lblTempMin"></label><br />
-                Temperature (Max)<label id="lblTempMax"></label><br />
-            </td>
-        </tr>
-    </table>
-</div>
+<form method="post">
+    <div>
+        <h2>Weather Forecast</h2>
+        <table>
+            <tr>
+                <td>Weather Symbol Icon <img id="imageWeatherIconUrl" src="" title="Weather Icon" /></td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>City: </strong>
+                    <span id="lblCity"></span>
+                    <span id="lblCountry"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Latitude: </strong>
+                    <label id="lblLat"></label><br />
+                    <strong>Longitude: </strong>
+                    <label id="lblLon"></label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <strong>Description:</strong>
+                    <label id="lblDescription"></label><br />
+                    <strong>Humidity:</strong>
+                    <label id="lblHumidity"></label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Temperature (Feels Like)<label id="lblTempFeelsLike"></label><br />
+                    Temperature: <label id="lblTemp"></label><br />
+                    Temperature (Min)<label id="lblTempMin"></label><br />
+                    Temperature (Max)<label id="lblTempMax"></label><br />
+                </td>
+            </tr>
+        </table>
+    </div>
+</form>
 
 <script>
 
@@ -61,22 +62,22 @@
         var cityname = $("#txtCity").val();
         if (cityname.length > 0) {
             $.ajax({
-                url: "http://localhost:44347/WeatherForecast/WeatherDetail?City=" + cityname,
+                url: "https://localhost:44347/WeatherForecast/WeatherDetail?City=" + cityname,
                 type: "POST",
                 success: function (rsltval) {
                     var data = JSON.parse(rsltval);
                     console.log(data);
-                    $("#lblCity").html(data.City);
-                    $("#lblCountry").text(data.Country);
-                    $("#lblLat").text(data.Lat);
-                    $("#lblLon").text(data.Lon);
-                    $("#lblDescription").text(data.Description);
-                    $("#lblHumidity").text(data.Humidity);
-                    $("#lblTempFeelsLike").text(data.TempFeelsLike);
-                    $("#lblTemp").text(data.Temp);
-                    $("#lblTempMax").text(data.TempMax);
-                    $("#lblTempMin").text(data.TempMin);
-                    $("#imgWeatherIconUrl").attr("src", "http://openweathermap.org/img/w/" + data.WeatherIcon + ".png");
+                    $("#lblCity").html(data.city);
+                    $("#lblCountry").text(data.country);
+                    $("#lblLat").text(data.lat);
+                    $("#lblLon").text(data.lon);
+                    $("#lblDescription").text(data.description);
+                    $("#lblHumidity").text(data.humidity);
+                    $("#lblTempFeelsLike").text(data.tempfeelslike);
+                    $("#lblTemp").text(data.temp);
+                    $("#lblTempMax").text(data.tempMax);
+                    $("#lblTempMin").text(data.tempMin);
+                    $("#imgWeatherIconUrl").attr("src", "http://openweathermap.org/img/w/" + data.weatherIcon + ".png");
                     //data - response from server
                 },
                 error: function () {
@@ -89,4 +90,4 @@
         }
     });
 
-</script>   
+</script>
