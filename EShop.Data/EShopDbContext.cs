@@ -14,5 +14,6 @@ namespace EShop.Data
         public DbSet<ExistingFilePath> ExistingFilePath { get; set; }
         public DbSet<Spaceship> Spaceship { get; set; }
         public DbSet<FileToDatabase> FileToDatabase { get; set; }
+        public DbSet<Command> Command { get; set; }
     }
 }
